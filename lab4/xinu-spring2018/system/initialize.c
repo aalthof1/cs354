@@ -21,6 +21,14 @@ struct	procent	proctab[NPROC];	/* Process table			*/
 struct	sentry	semtab[NSEM];	/* Semaphore table			*/
 struct	memblk	memlist;	/* List of free memory blocks		*/
 
+/* Added by Aaron Althoff for lab 4 */
+
+struct xts_tab xts_conf[XTS_PRIOLEV]; /* table of values for priorities */
+
+struct xts_multifb xts_ready[XTS_PRIOLEV]; /* ready queues for prio levs */
+
+/*---------------------------------------------------------*/
+
 /* Active system status */
 
 int	prcount;		/* Total number of live processes	*/
@@ -102,6 +110,8 @@ static	void	sysinit()
 	int32	i;
 	struct	procent	*prptr;		/* Ptr to process table entry	*/
 	struct	sentry	*semptr;	/* Ptr to semaphore table entry	*/
+	/*Added by Aarom Althoff for lab 4*/
+	struct xts_tab	*xtsptr;	/* Ptr to xts table entry */
 
 	/* Platform Specific Initialization */
 
@@ -158,6 +168,31 @@ static	void	sysinit()
 	/* Initialize buffer pools */
 
 	bufinit();
+
+	/*Added by Aaron Althoff, 3/8/18 for lab4*/
+	
+	/*initialize TS scheduler*/
+	
+	for (i = 0; i < XTS_PRIOLEV; i++) {
+		xtsptr = &xts_conf[i];
+		if(i <= 9) {
+			xtsptr->ts_tqexp = 0;
+			xtsptr->ts_slpret = 50;
+			xtsptr->ts_quantum = 200;
+		} else if (i >= 10 && i <= 19) {
+			xtsptr->ts_tqexp = i-10;
+			xtsptr->ts_slpret = 51;
+			xtsptr->ts_quantum = 160;
+		} else if (i >= 20 && i <= 29) {
+			xtsptr->ts_tqexp = i-10;
+			xtsptr->ts_slpret = 52;
+			xtsptr->ts_quantum = 120;
+		}
+	}
+
+	
+
+	/*---------------------------------------*/
 
 	/* Create a ready list for processes */
 
