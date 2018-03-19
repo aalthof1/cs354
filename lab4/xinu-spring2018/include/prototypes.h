@@ -642,6 +642,15 @@ extern	syscall	write(did32, char *, uint32);
 /* in file xdone.c */
 extern	void	xdone(void);
 
+/* in file xts_enqueue.c */
+extern	int	xts_enqueue(pid32, pri16);
+
+/* in file xts_dequeue.c */
+extern	pid32	xts_dequeue(void);
+
+/* in file xts_priochk.c */
+extern	pri16	xts_priochk(void);
+
 /* in file yield.c */
 extern	syscall	yield(void);
 

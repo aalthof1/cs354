@@ -29,8 +29,14 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 			return;
 		}
 
-		/* Old process will no longer remain current */
+		/* Added by Aaron Althoff for lab 4 */
+		/* Update process time of old process */
 
+//		ptold->prcputot = clkmilli - ptold->prctxswbeg;
+		/*----------------------------------*/
+
+		/* Old process will no longer remain current */
+		
 		ptold->prstate = PR_READY;
 		insert(currpid, readylist, ptold->prprio);
 	}
@@ -39,6 +45,7 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 
 	currpid = dequeue(readylist);
 	ptnew = &proctab[currpid];
+//	ptnew->prctxswbeg = clkmilli;
 	ptnew->prstate = PR_CURR;
 	preempt = QUANTUM;		/* Reset time slice for process	*/
 	ctxsw(&ptold->prstkptr, &ptnew->prstkptr);

@@ -79,16 +79,20 @@ void	nulluser()
 		(uint32)&ebss - (uint32)&data);
 	kprintf("           [0x%08X to 0x%08X]\n\n",
 		(uint32)&data, (uint32)&ebss - 1);
-
+	kprintf("\nBEFORE MAIN\n");
 	/* Enable interrupts */
 
 	enable();
+
+	kprintf("INTERUPTS ENABLED");
 
 	/* Create a process to execute function main() */
 
 	resume (
 	   create((void *)main, INITSTK, INITPRIO, "Main process", 0,
            NULL));
+
+	kprintf("\nCREATED MAIN\n");
 
 	/* Become the Null process (i.e., guarantee that the CPU has	*/
 	/*  something to run when no other process is ready to execute)	*/
@@ -174,20 +178,58 @@ static	void	sysinit()
 	/*initialize TS scheduler*/
 	
 	for (i = 0; i < XTS_PRIOLEV; i++) {
-		xtsptr = &xts_conf[i];
+		xtsptr = &(xts_conf[i]);
 		if(i <= 9) {
-			xtsptr->ts_tqexp = 0;
-			xtsptr->ts_slpret = 50;
-			xtsptr->ts_quantum = 200;
+			xtsptr->xts_tqexp = 0;
+			xtsptr->xts_slpret = 50;
+			xtsptr->xts_quantum = 200;
 		} else if (i >= 10 && i <= 19) {
-			xtsptr->ts_tqexp = i-10;
-			xtsptr->ts_slpret = 51;
-			xtsptr->ts_quantum = 160;
+			xtsptr->xts_tqexp = i-10;
+			xtsptr->xts_slpret = 51;
+			xtsptr->xts_quantum = 160;
 		} else if (i >= 20 && i <= 29) {
-			xtsptr->ts_tqexp = i-10;
-			xtsptr->ts_slpret = 52;
-			xtsptr->ts_quantum = 120;
+			xtsptr->xts_tqexp = i-10;
+			xtsptr->xts_slpret = 52;
+			xtsptr->xts_quantum = 120;
+		} else if (i >= 30 && i <= 34) {
+			xtsptr->xts_tqexp = i-10;
+			xtsptr->xts_slpret = 53;
+			xtsptr->xts_quantum = 80;
+		} else if (i >= 35 && i <= 39) {
+			xtsptr->xts_tqexp = i-10;
+			xtsptr->xts_slpret = 54;
+			xtsptr->xts_quantum = 80;
+		} else if (i >= 40 && i <= 44) {
+			xtsptr->xts_tqexp = i-10;
+			xtsptr->xts_slpret = 55;
+			xtsptr->xts_quantum = 40;
+		} else if (i >= 45 && i <= 46) {
+			xtsptr->xts_tqexp = i-10;
+			xtsptr->xts_slpret = i+11;
+			xtsptr->xts_quantum = 40;
+		} else if (i >= 47 && i <= 48) {
+			xtsptr->xts_tqexp = i-10;
+			xtsptr->xts_slpret = 58;
+			xtsptr->xts_quantum = 40;
+		} else if (i >= 49 && i <= 58) {
+			xtsptr->xts_tqexp = i-10;
+			xtsptr->xts_slpret = 59;
+			xtsptr->xts_quantum = 40;
+		} else if (i == 59) {
+			xtsptr->xts_tqexp = i-10;
+			xtsptr->xts_slpret = 59;
+			xtsptr->xts_quantum = 20;
 		}
+	}
+
+	/* intialize xts_ready */
+
+	for (i = 0; i < XTS_PRIOLEV; i++) {
+		qid16 q = newqueue();
+		struct xts_multifb * fblev = &xts_ready[i];
+		fblev->status = 0;
+		fblev->queue_head = queuehead(q);
+		fblev->queue_tail = queuetail(q);
 	}
 
 	

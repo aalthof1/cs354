@@ -3,6 +3,7 @@
 #include <xinu.h>
 
 uint32	clktime;		/* Seconds since boot			*/
+uint32	clkmilli;		/* Milliseconds since boot		 */
 uint32	ctr1000 = 0;		/* Milliseconds since boot		*/
 qid16	sleepq;			/* Queue of sleeping processes		*/
 uint32	preempt;		/* Preemption counter			*/
@@ -26,6 +27,14 @@ void	clkinit(void)
 	/* Initialize the time since boot to zero */
 
 	clktime = 0;
+
+	/* Added by Aaron Althoff for lab4 */
+	
+	/*Initialize the time in ms since boot to zero  */
+	
+	clkmilli = 0;
+
+	/*---------------------------------*/
 
 	/* Set interrupt vector for the clock to invoke clkdisp */
 

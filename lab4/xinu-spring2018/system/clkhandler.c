@@ -10,8 +10,17 @@ void	clkhandler()
 {
 	static	uint32	count1000 = 1000;	/* Count to 1000 ms	*/
 
-	/* Decrement the ms counter, and see if a second has passed */
+	/* Added by Aaron Althoff for lab 4 */
 
+	/* increment time in ms since boot */
+
+	clkmilli++;
+
+	/*----------------------------------*/
+
+
+	/* Decrement the ms counter, and see if a second has passed */
+	
 	if((--count1000) <= 0) {
 
 		/* One second has passed, so increment seconds count */
