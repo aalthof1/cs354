@@ -41,7 +41,7 @@ void	clkhandler()
 	/*   remaining time reaches zero			     */
 
 	if((--preempt) <= 0) {
-		preempt = QUANTUM;
+		preempt = xts_conf[xts_priochk()].xts_quantum;
 		resched();
 	}
 }

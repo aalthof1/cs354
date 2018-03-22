@@ -12,10 +12,16 @@ pid32 xts_dequeue(void) {
 	for(;i>=0;i--) {
 		struct xts_multifb * fblev = &xts_ready[i];
 		if(fblev->status == 1) {
-			ret = dequeue(fblev->queue_head);
+			#ifdef DEBUG
+			kprintf("in xts_dequeue: i=%d\n",i);
+			#endif
+			ret = dequeue(queuetab[queuetab[fblev->queue_head].qnext].qkey);
 			if(isempty(fblev->queue_head)) {
 				fblev->status = 0;
 			}
+			#ifdef DEBUG
+			kprintf("ret=%d\n",ret);
+			#endif
 			return ret;
 		}
 	}

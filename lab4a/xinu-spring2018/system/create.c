@@ -27,6 +27,11 @@ pid32	create(
 	uint32		*a;		/* Points to list of args	*/
 	uint32		*saddr;		/* Stack address		*/
 
+	/*Added by Aaron Althoff to handle rdsproc*/
+	if(priority > 59) {
+		priority = 59;
+	}
+
 	mask = disable();
 	if (ssize < MINSTK)
 		ssize = MINSTK;
@@ -100,6 +105,10 @@ pid32	create(
 	*--saddr = 0;			/* %esi */
 	*--saddr = 0;			/* %edi */
 	*pushsp = (unsigned long) (prptr->prstkptr = (char *)saddr);
+	#ifdef DEBUG
+	kprintf("\nin create\nname:%s\tpid:%d\tprio:%d\n",name,pid,priority);
+	#endif
+	xts_enqueue(pid,priority);
 	restore(mask);
 	return pid;
 }

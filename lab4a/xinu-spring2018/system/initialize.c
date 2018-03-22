@@ -86,6 +86,7 @@ void	nulluser()
 	   create((void *)main, INITSTK, INITPRIO, "Main process", 0,
            NULL));
 
+
 	/* Become the Null process (i.e., guarantee that the CPU has	*/
 	/*  something to run when no other process is ready to execute)	*/
 
@@ -108,6 +109,7 @@ static	void	sysinit()
 	struct	sentry	*semptr;	/* Ptr to semaphore table entry	*/
 	/*Added by Aaron Althoff for lab 4*/
 	struct	xts_tab	*xtsptr; 	/* ptr to xts table entry */
+	struct	xts_multifb *fblev;	/* ptr to a prio level in the mlfbq */
 
 	/* Platform Specific Initialization */
 
@@ -211,6 +213,8 @@ static	void	sysinit()
 	}
 
 	/* intialize xts_ready */
+
+
 	/* Initialize buffer pools */
 
 	bufinit();

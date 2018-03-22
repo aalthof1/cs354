@@ -20,32 +20,57 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 		return;
 	}
 
+
 	/* Point to process table entry for the current (old) process */
 
 	ptold = &proctab[currpid];
 
-	/*Added by Aaron Althoff for lab 4*/
-	ptold->prcputot += clkmilli - ptold->prctxswbeg; /* update time process has been running */
+	/*-----------------Added by Aaron Althoff for lab 4-------------*/
 
+	ptold->prcputot += clkmilli - ptold->prctxswbeg; /* update time process has been running */
+	
+	#ifdef DEBUG
+	kprintf("\nin resched\n");
+	kprintf("name:%s\tprio:%d\n",ptold->prname,ptold->prprio);
+	#endif
+	/* Update priority */
+
+	struct xts_tab * oldprio = &xts_conf[ptold->prprio];
+	if(preempt < oldprio->xts_quantum) { /* process does not use all of it's CPU time */
+		if (ptold->prprio == 0) {}
+		else if (ptold->prprio < 59) { /* do not update priority above max priority */
+			ptold->prprio++;
+		}
+	} else { /* process uses all of it's CPU time */
+		if (ptold->prprio == 0) {}
+		else if (ptold->prprio > 1) { /* do not allow process to go below priority of 1 */
+			ptold->prprio--;
+		}
+	}
 	if (ptold->prstate == PR_CURR) {  /* Process remains eligible */
-		if (ptold->prprio > firstkey(readylist)) {
+		if (ptold->prprio > xts_priochk()) { /* process has highest priority */
 			return;
 		}
 
 		/* Old process will no longer remain current */
 
 		ptold->prstate = PR_READY;
-		insert(currpid, readylist, ptold->prprio);
+		xts_enqueue(currpid, ptold->prprio); /* add pid to multifb table */
 	}
 
-	/* Force context switch to highest priority ready process */
+	/*----------------------------------------------------------------*/
 
-	currpid = dequeue(readylist);
+	/* Force context switch to highest priority ready process */
+	currpid = xts_dequeue();
 	ptnew = &proctab[currpid];
+	#ifdef DEBUG
+	kprintf("new - name:%s\tprio:%d\n",ptnew->prname,ptnew->prprio);
+	#endif
 	/*Added by Aaron Althoff for lab 4*/
 	ptnew->prctxswbeg = clkmilli; /* update time process was ctxswed in */
 	ptnew->prstate = PR_CURR;
-	preempt = QUANTUM;		/* Reset time slice for process	*/
+	struct xts_tab * newprio = &xts_conf[ptnew->prprio];
+	preempt = newprio->xts_quantum;		/* Reset time slice for process	*/
 	ctxsw(&ptold->prstkptr, &ptnew->prstkptr);
 
 	/* Old process returns here when resumed */
