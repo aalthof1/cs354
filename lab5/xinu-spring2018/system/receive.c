@@ -20,6 +20,21 @@ umsg32	receive(void)
 	}
 	msg = prptr->prmsg;		/* Retrieve message		*/
 	prptr->prhasmsg = FALSE;	/* Reset message flag		*/
+	/*Added by Aaron Althoff for lab 5*/
+	if(prptr->rcpblkflag) {
+		qid16 qhead = prptr->sendqueue;
+		pid32 pid = dequeue(qhead);
+		struct procent * prsnd = &proctab[pid];
+		/* if queue is empty, set rcpblkflag to 0 */
+		if(isempty(qhead)) {
+			prptr->rcpblkflag = 0;
+		}
+		prptr->prhasmsg = 1;
+		prptr->prmsg = prsnd->sendblkmsg;
+		prsnd->sendblkflag = 0;
+		prsnd->prstate = PR_READY;
+	}
+	/*--------------------------------*/
 	restore(mask);
 	return msg;
 }

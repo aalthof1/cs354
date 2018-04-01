@@ -1,3 +1,14 @@
+/* Added by Aaron Althoff for lab 5*/
+/* in file sendblk.c */
+extern	syscall	sendblk(pid32,umsg32);
+
+/* in file testsendblk.c */
+extern	void	testsendblk(pid32);
+
+/* in file testreceive.c */
+extern	void	testreceive(void);
+/*---------------------------------*/
+
 /* in file addargs.c */
 extern	status	addargs(pid32, int32, int32[], int32,char *, void *);
 

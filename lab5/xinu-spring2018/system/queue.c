@@ -16,6 +16,8 @@ pid32	enqueue(
 	int	tail, prev;		/* Tail & previous node indexes	*/
 
 	if (isbadqid(q) || isbadpid(pid)) {
+		if(isbadqid(q)) kprintf("%d is badqid\n",q);
+		if(isbadpid(pid)) kprintf("%d is badpid\n",pid);
 		return SYSERR;
 	}
 

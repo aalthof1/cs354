@@ -4,8 +4,12 @@
 
 /* Default # of queue entries: 1 per process plus 2 for ready list plus	*/
 /*			2 for sleep list plus 2 per semaphore		*/
+/*----------------------------------------------------------------------
+ * UPDATED BY Aaron Althoff FOR LAB 5: increased NEQNT by 2 * NPROC to 
+ * make room for the recieving sndblk queues
+ *--------------------------------------------------------------------*/
 #ifndef NQENT
-#define NQENT	(NPROC + 4 + NSEM + NSEM)
+#define NQENT	(NPROC + 4 + NSEM + NSEM + NPROC + NPROC)
 #endif
 
 #define	EMPTY	(-1)		/* Null value for qnext or qprev index	*/

@@ -1,0 +1,45 @@
+NAME
+	receive - Blocking system message receive operation
+
+SYNOPSIS
+	#include <xinu.h>
+
+	syscall sendblk();
+
+DESCRIPTION
+	The sendblk() and receive() system calls are used, respectively,
+	to  send  messages  to,  and  receive  messages from, a process'
+	message queue.
+
+receive()
+	The  receive()  system  call removes the message from it's prmsg
+	process  table  field.  If  there  are  entries  in the process'
+	sendqueue  queue,  the oldest item is removed and placed and the
+	sendblkmsg  of  the corresponding pid is placed in the receiving
+	process'  prmsg field. If there is no message in the prmsg field
+	the calling process blocks until a message is received.
+
+	Upon  successful completion the receiving process' process table
+	entry is updated as follows:
+
+		sendqueue is updated to remove the oldest entry if
+		necessary
+
+		rcpblkflag is set to 0 if the sendqueue is empty
+
+		prhasmsg is set to 0 if the process no longer has a 
+		message
+
+		prmsg is updated to hold the message of the sendqueue
+		entry's sendblkmsg if necessary
+
+	Upon  successful  completion  the sending process' process table
+	entry is updated as follows if blocking was necessary:
+
+		sendblkflag is set to 0
+
+		prstate is set to PR_READY
+
+RETURN VALUE
+	On  failure  receive()  returns  -1,  otherwise  it  returns the
+	message received.
