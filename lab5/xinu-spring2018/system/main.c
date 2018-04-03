@@ -24,16 +24,28 @@ process	main(void)
 //		resume(create(shell, 4096, 20, "shell", 1, CONSOLE));
 //	}
 
-	pid32 testrec = create(testreceive, 2048, 10, "testrec", 0);
+	pid32 testrec = create(testreceive, 2048, 14, "testrec", 0);
 	struct procent * prptr = &proctab[testrec];
 	#ifdef DEBUG
 	kprintf("testrec created with pid %d and state %d\n",testrec,prptr->prstate);
 	#endif
 	resume(testrec);
-	resume(create(testsendblk, 2048, 16, "testsb1", 1, testrec));
-	resume(create(testsendblk, 2048, 15, "testsb2", 1, testrec));
-	resume(create(testsendblk, 2048, 15, "testsb3", 1, testrec));
-	resume(create(testsendblk, 2048, 15, "testsb4", 1, testrec));
+	pid32 four = create(testsendblk, 2048, 15, "testsb1", 1, testrec);
+	pid32 five = create(testsendblk, 2048, 15, "testsb2", 1, testrec);
+	pid32 six = create(testsendblk, 2048, 15, "testsb3", 1, testrec);
+	pid32 seven = create(testsendblk, 2048, 15, "testsb4", 1, testrec);
+
+	resume(six);
+	resume(four);
+	resume(seven);
+	resume(five);
+
+	pid32 asrec = create(testasipcrec, 2048, 13, "testasipcrec",0);
+	resume(asrec);
+	resume(create(testsendblk,2048,13,"testasipcsend",1,asrec));
+	resume(create(testsendblk,2048,13,"testasipcsend2",1,asrec));
+	resume(create(testsendblk,2048,13,"testasipcsend3",1,asrec));
+	resume(create(testsendblk,2048,13,"testasipcsend4",1,asrec));
 	
 	return OK;
 }

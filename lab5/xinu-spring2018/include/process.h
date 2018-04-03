@@ -59,6 +59,8 @@ struct procent {		/* Entry in the process table		*/
 	pid32	sendblkrcp;	/* PID of recipient */
 	bool8	rcpblkflag;	/* Nonzero iff one or more processes are waiting to send */
 	qid16	sendqueue;	/* Index to FIFO queue of blocked senders */
+	bool8	prhascb;	/* Nonzero iff callback function has been registered */
+	int (* fptr)();		/* Pointer to cb function if one has been registered */
 	/*--------------------------------*/
 };
 

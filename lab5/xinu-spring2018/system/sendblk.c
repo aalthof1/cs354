@@ -38,7 +38,7 @@ syscall sendblk(
 	#endif
 	/* if recieving process does not have a message, send	*/
 	if(prptr->prhasmsg == FALSE) {
-		restore(mask);
+//		restore(mask);
 		return send(pid,msg);
 	}
 	#ifdef DEBUG

@@ -7,6 +7,21 @@ extern	void	testsendblk(pid32);
 
 /* in file testreceive.c */
 extern	void	testreceive(void);
+
+/* in file cbreg.c */
+extern	syscall	cbreg(int (*)(void));
+
+/* in file callback.c */
+extern	int32	callback(void);
+
+/* in file testasipcrec.c */
+extern	void	testasipcrec(void);
+
+/* in file cbcheck.c */
+extern	void	cbcheck(void);
+
+/* in file loopproc.c */
+extern	void	loopproc(void);
 /*---------------------------------*/
 
 /* in file addargs.c */

@@ -2,6 +2,7 @@
 
 		.text
 		.globl	ctxsw
+		.globl	cbcheck
 
 /*------------------------------------------------------------------------
  * ctxsw -  X86 context switch; the call is ctxsw(&old_sp, &new_sp)
@@ -33,4 +34,6 @@ ctxsw:
 					/*   interrupts			*/
 		popfl			/* Restore interrupt mask	*/
 		add	$4,%esp		/* Skip saved value of ebp	*/
+		/*Added by Aaron Althoff for lab 5*/
+		call	cbcheck		/* Check for IPC callback	*/
 		ret			/* Return to new process	*/

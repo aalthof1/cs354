@@ -13,6 +13,9 @@ void testsendblk(pid32 pid)
 	kprintf("\nin sendblk with pid: %d, param=%d\n",currpid,pid);
 	#endif
 	int ret = sendblk(pid,currpid);
+	if(ret == SYSERR) {
+		kprintf("SENDING FAILED\n");
+	}
 	#ifdef DEBUG
 	kprintf("\nsent %d with ret=%d\n",currpid,ret);
 	#endif
