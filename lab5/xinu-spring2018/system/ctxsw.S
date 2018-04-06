@@ -35,5 +35,5 @@ ctxsw:
 		popfl			/* Restore interrupt mask	*/
 		add	$4,%esp		/* Skip saved value of ebp	*/
 		/*Added by Aaron Althoff for lab 5*/
-		call	cbcheck		/* Check for IPC callback	*/
+//		call	cbcheck		/* Check for IPC callback	*/
 		ret			/* Return to new process	*/
