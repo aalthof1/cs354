@@ -28,6 +28,14 @@ syscall	send(
 	prptr->prmsg = msg;		/* Deliver message		*/
 	prptr->prhasmsg = TRUE;		/* Indicate message is waiting	*/
 
+	if(prptr->prfirstsig == 0) {
+		prptr->prfirstsig = XSIGRCV;
+	} else if (prptr->prsecondsig == 0) {
+		prptr->prsecondsig = XSIGRCV;
+	} else if (prptr->prthirdsig == 0) {
+		prptr->prthirdsig = XSIGRCV;
+	}
+
 	/* If recipient waiting or in timed-wait make it ready */
 
 	if (prptr->prstate == PR_RECV) {

@@ -16,6 +16,8 @@
 #define	PR_SUSP		5	/* Process is suspended			*/
 #define	PR_WAIT		6	/* Process is on semaphore queue	*/
 #define	PR_RECTIM	7	/* Process is receiving with timeout	*/
+#define PR_SNDBLK	20	/* Process is blocking to send		*/
+#define PR_CHLDWAIT	21	/* Process is blocking until child ends */
 
 /* Miscellaneous process definitions */
 
@@ -52,6 +54,30 @@ struct procent {		/* Entry in the process table		*/
 	umsg32	prmsg;		/* Message sent to this process		*/
 	bool8	prhasmsg;	/* Nonzero iff msg is valid		*/
 	int16	prdesc[NDESC];	/* Device descriptors for process	*/
+	/*Added by Aaron Althoff for lab 5*/
+	bool8	sendblkflag;	/* Nonzero iff blocking to send 	*/
+	umsg32	sendblkmsg;	/* Message attempting to send 		*/
+	pid32	sendblkrcp;	/* PID of recipient 			*/
+	bool8	rcpblkflag;	/* Nonzero iff one or more processes are waiting to send */
+	qid16	sendqueue;	/* Index to FIFO queue of blocked senders */
+	bool8	prhascb;	/* Nonzero iff callback function has been registered */
+	int (* fptr)();		/* Pointer to cb function if one has been registered */
+	/*--------------------------------*/
+	/*Added by Aaron Althoff for lab 6*/
+	bool8	prhascb1;	/* Nonzero iff XSIGCHL callback function has been registered */
+	int (* fptr1)(void);	/* Pointer to XSIGCHL cb function if one has been registered */
+	bool8	prhascb2;	/* Nonzero iff XSIGXTM callback function has been registered */
+	int (* fptr2)(void);	/* Pointer to XSIGXTM cb function if one has been registered */
+	uint32	prtmarg;	/* Time argument passed in sigcbreg for XSIGXTM */
+	uint32	prfirstsig;	/* first signal received		*/
+	uint32	prsecondsig;	/* second signal received		*/
+	uint32	prthirdsig;	/* third signal received		*/
+	pid32	prchldterm;	/* pid of the child terminated		*/
+	uint32	prchlnum;	/* number of child processes a process has */
+	uint32	prstarttime;	/* Start time of process		*/
+	bool8	prxtmsighand;	/* process has had XSIGXTM handled	*/
+	struct memstruct memory; /* used to keep track of memory allocated */
+	/*--------------------------------*/
 };
 
 /* Marker for the top of a process stack (used to help detect overflow)	*/

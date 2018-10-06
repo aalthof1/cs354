@@ -25,7 +25,26 @@ syscall	kill(
 		xdone();
 	}
 
-	send(prptr->prparent, pid);
+	//send(prptr->prparent, pid);
+	if(!isbadpid(prptr->prparent) && prptr->prparent != 0) {
+		struct procent * parent = &proctab[prptr->prparent];
+		if(parent->prfirstsig == XSIGCHL || parent->prsecondsig == XSIGCHL ||
+			parent->prthirdsig == XSIGCHL) {
+			//do nothing
+		} else if (parent->prfirstsig == 0) {
+			parent->prfirstsig = XSIGCHL;
+		} else if(parent->prsecondsig == 0) {
+			parent->prsecondsig = XSIGCHL;
+		} else if(parent->prthirdsig == 0) {
+			parent->prthirdsig = XSIGCHL;
+		}
+		if(parent->prchldterm == 0) {
+			parent->prchldterm = pid;
+		}
+		if(parent->prstate == PR_CHLDWAIT && prptr->prparent != 0) {
+			ready(prptr->prparent);
+		}
+	}
 	for (i=0; i<3; i++) {
 		close(prptr->prdesc[i]);
 	}

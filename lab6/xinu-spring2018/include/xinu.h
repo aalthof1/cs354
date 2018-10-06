@@ -1,5 +1,6 @@
 /* xinu.h - include all system header files */
-
+#include <memstruct.h>
+#include <xinu_signal.h>
 #include <kernel.h>
 #include <conf.h>
 #include <process.h>

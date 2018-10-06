@@ -21,6 +21,7 @@ void	clkhandler()
 		/* Reset the local ms counter for the next second */
 
 		count1000 = 1000;
+
 	}
 
 	/* Handle sleeping processes if any exist */
@@ -32,6 +33,26 @@ void	clkhandler()
 
 		if((--queuetab[firstid(sleepq)].qkey) <= 0) {
 			wakeup();
+		}
+	}
+
+	struct procent * prptr = &proctab[currpid];
+	if(prptr->prhascb2) {
+		if(clktime-prptr->prstarttime >= prptr->prtmarg) {
+//			kprintf("yep\n");
+			if(prptr->prfirstsig == XSIGXTM || prptr->prsecondsig == XSIGXTM
+				|| prptr->prthirdsig == XSIGXTM) {
+				//do nothing
+			} else if (prptr->prfirstsig == 0) {
+//				kprintf("******************FIRST***********************");
+				prptr->prfirstsig = XSIGXTM;
+			} else if (prptr->prsecondsig == 0) {
+//				kprintf("******************SECOND***********************");
+				prptr->prsecondsig = XSIGXTM;
+			} else if (prptr->prthirdsig == 0) {
+//				kprintf("******************THIRD***********************");
+				prptr->prthirdsig = XSIGXTM;
+			}
 		}
 	}
 

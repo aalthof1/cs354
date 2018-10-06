@@ -1,0 +1,50 @@
+NAME
+	sendblk - Blocking system message send operation
+
+SYNOPSIS
+	#include <xinu.h>
+
+	syscall sendblk(pid32 pid, umsg32 msg);
+
+DESCRIPTION
+	The sendblk() and receive() system calls are used, respectively,
+	to  send  messages  to,  and  receive  messages from, a process'
+	message queue.
+
+sendblk()
+	The  sendblk()  system  call  sends  a  message  to  the process
+	specified  by  its process id pid. If the receiving process does
+	not  have  a  message  in  its  prmsg field, the message is sent
+	directly  to  the  process.  If  the process does already have a 
+	message,   the   message  is  stored  in  the  sending  process' 
+	sendblkmsg  field,  and  the  sending  processes pid is enqueued
+	to  the  receiving  process'  sendqueue queue and its rcpblkflag
+	is updated to indicate there are processes blocking to send.
+
+	Upon  successful completion the receiving process' process table
+	entry is updated as follows:
+
+		rcpblkflag is set to 1 if the sendqueue is not empty
+
+		sendqueue is updated to hold the pid of the sending
+		process if necessary
+
+		prhasmsg is set to 1 if the process did not previously
+		have a message
+
+		prmsg is updated to hold the message if it did not
+		previously have a message
+
+	Upon  successful  completion  the sending process' process table
+	entry is updated as follows if blocking is necessary:
+
+		sendblkflag is set to 1
+
+		sendblkmsg is set to the message waiting to be sent
+
+		sendblkrcp is the process id of the receiving process
+
+		prstate is set to PR_SNDBLK
+
+RETURN VALUE
+	On failure sendblk() returns -1, otherwise it returns 0

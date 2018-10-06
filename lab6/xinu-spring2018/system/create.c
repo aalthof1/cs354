@@ -40,7 +40,6 @@ pid32	create(
 
 	prcount++;
 	prptr = &proctab[pid];
-
 	/* Initialize process table entry for new process */
 	prptr->prstate = PR_SUSP;	/* Initial state is suspended	*/
 	prptr->prprio = priority;
@@ -52,6 +51,19 @@ pid32	create(
 	prptr->prsem = -1;
 	prptr->prparent = (pid32)getpid();
 	prptr->prhasmsg = FALSE;
+	/*Added by Aaron Althoff for lab 6*/
+	prptr->prchlnum = 0;
+	if(prptr->prparent != 0) {
+		struct procent * parent = &proctab[prptr->prparent];
+		parent->prchlnum++;
+	}
+	prptr->prstarttime = clktime;	/* Set start time to clktime */
+	struct memstruct mem;
+	mem.next = NULL;
+	mem.nbytes = 3;
+	mem.blkaddr = 0;
+	prptr->memory = mem;
+	/*--------------------------------*/
 
 	/* Set up stdin, stdout, and stderr descriptors for the shell	*/
 	prptr->prdesc[0] = CONSOLE;

@@ -11,6 +11,7 @@ char  	*getmem(
 	)
 {
 	intmask	mask;			/* Saved interrupt mask		*/
+	struct	procent * prptr;	/* Pointer to current process	*/
 	struct	memblk	*prev, *curr, *leftover;
 
 	mask = disable();
@@ -18,6 +19,7 @@ char  	*getmem(
 		restore(mask);
 		return (char *)SYSERR;
 	}
+	prptr = &proctab[currpid];
 
 	nbytes = (uint32) roundmb(nbytes);	/* Use memblk multiples	*/
 
@@ -28,6 +30,18 @@ char  	*getmem(
 		if (curr->mlength == nbytes) {	/* Block is exact match	*/
 			prev->mnext = curr->mnext;
 			memlist.mlength -= nbytes;
+//			if(currpid != 0) {
+//				prptr = &proctab[currpid];
+//				struct memstruct currmemstruct = prptr->memory;
+//				struct memstruct mem;
+//				mem.next = NULL;
+//				mem.blkaddr = (char*)curr;
+//				mem.nbytes = (int)nbytes;
+//				while(currmemstruct.next != NULL) {
+//					currmemstruct = *(currmemstruct.next);
+//				}
+//				currmemstruct.next = &mem;
+//			}
 			restore(mask);
 			return (char *)(curr);
 
@@ -38,6 +52,19 @@ char  	*getmem(
 			leftover->mnext = curr->mnext;
 			leftover->mlength = curr->mlength - nbytes;
 			memlist.mlength -= nbytes;
+//			if(currpid != 0) {
+//				prptr = &proctab[currpid];
+//				struct memstruct* currmemstruct = &(prptr->memory);
+//				struct memstruct mem;
+//				mem.next = NULL;
+//				mem.blkaddr = (char*)curr;
+//				mem.nbytes = (int)nbytes;
+//				while(currmemstruct->next != NULL) {
+//					currmemstruct = currmemstruct->next;
+//				}
+//				currmemstruct->next = &mem;
+//				kprintf("in getmem=%d\n",mem.blkaddr);
+//			}
 			restore(mask);
 			return (char *)(curr);
 		} else {			/* Move to next block	*/

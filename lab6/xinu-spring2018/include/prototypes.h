@@ -1,3 +1,52 @@
+/* Added by Aaron Althoff for lab 5*/
+/* in file sendblk.c */
+extern	syscall	sendblk(pid32,umsg32);
+
+/* in file testsendblk.c */
+extern	void	testsendblk(pid32);
+
+/* in file testreceive.c */
+extern	void	testreceive(void);
+
+/* in file cbreg.c */
+extern	syscall	cbreg(int (*)(void));
+
+/* in file callback.c */
+extern	int32	callback(void);
+
+/* in file testasipcrec.c */
+extern	void	testasipcrec(void);
+
+/* in file cbcheck.c */
+extern	void	cbcheck(void);
+
+/* in file loopproc.c */
+extern	void	loopproc(void);
+/*---------------------------------*/
+/*Added by Aaron Althoff for lab 6*/
+/* in file sigcbreg.c */
+extern	syscall	sigcbreg(uint16, int (*)(void),uint32);
+
+/* in file sigcbunreg.c */
+extern	syscall	sigcbunreg(uint16);
+
+/* in file sendsignal.c */
+extern	syscall	sendsignal(uint16, pid32);
+
+/* in file testgc.c */
+extern	void	testgc(void);
+
+/* in file childwait.c */
+extern	pid32	childwait(void);
+
+/* in file sigcheck.c */
+extern	syscall	sigcheck(void);
+
+/* in file testgc2.c */
+extern	void	testgc2(void);
+/*--------------------------------*/
+
+
 /* in file addargs.c */
 extern	status	addargs(pid32, int32, int32[], int32,char *, void *);
 
